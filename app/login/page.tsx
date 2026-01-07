@@ -30,8 +30,8 @@ export default function LoginPage() {
 
       if (data.user) {
         console.log("Login successful, redirecting...");
-        router.push("/tasks");
-        router.refresh();
+        // Force a full page reload to ensure session is recognized on server side
+        window.location.href = "/tasks";
       } else {
         throw new Error("ログインに成功しましたが、ユーザー情報が取得できませんでした");
       }

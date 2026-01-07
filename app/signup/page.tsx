@@ -45,8 +45,8 @@ export default function SignupPage() {
         // Email confirmation disabled - auto login
         setSuccess(true);
         setTimeout(() => {
-          router.push("/tasks");
-          router.refresh();
+          // Force a full page reload to ensure session is recognized on server side
+          window.location.href = "/tasks";
         }, 1500);
       } else if (data.user) {
         // Email confirmation enabled - show confirmation message

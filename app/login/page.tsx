@@ -18,18 +18,25 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
+      console.log("Attempting login with:", email);
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
+      console.log("Login response:", { data, error });
+
       if (error) throw error;
 
       if (data.user) {
+        console.log("Login successful, redirecting...");
         router.push("/tasks");
         router.refresh();
+      } else {
+        throw new Error("ログインに成功しましたが、ユーザー情報が取得できませんでした");
       }
     } catch (err: any) {
+      console.error("Login error:", err);
       setError(err.message || "ログインに失敗しました");
     } finally {
       setLoading(false);

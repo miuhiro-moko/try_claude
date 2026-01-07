@@ -11,6 +11,7 @@ export default function SignupPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [emailConfirmation, setEmailConfirmation] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -39,20 +40,17 @@ export default function SignupPage() {
 
       if (error) throw error;
 
-      if (data.user) {
-        // Check if email confirmation is required
-        if (data.user.identities && data.user.identities.length === 0) {
-          // User exists but not confirmed
-          setSuccess(true);
-          setError("確認メールを送信しました。メールを確認してアカウントを有効化してください。");
-        } else {
-          // Auto login after signup (when email confirmation is disabled)
-          setSuccess(true);
-          setTimeout(() => {
-            router.push("/tasks");
-            router.refresh();
-          }, 1500);
-        }
+      // Check if email confirmation is required by checking if session exists
+      if (data.session) {
+        // Email confirmation disabled - auto login
+        setSuccess(true);
+        setTimeout(() => {
+          router.push("/tasks");
+          router.refresh();
+        }, 1500);
+      } else if (data.user) {
+        // Email confirmation enabled - show confirmation message
+        setEmailConfirmation(true);
       }
     } catch (err: any) {
       setError(err.message || "登録に失敗しました");
@@ -76,6 +74,13 @@ export default function SignupPage() {
           {error && (
             <div className="rounded-md bg-red-50 dark:bg-red-900/20 p-4">
               <p className="text-sm text-red-800 dark:text-red-200">{error}</p>
+            </div>
+          )}
+          {emailConfirmation && (
+            <div className="rounded-md bg-blue-50 dark:bg-blue-900/20 p-4">
+              <p className="text-sm text-blue-800 dark:text-blue-200">
+                確認メールを送信しました。メールを確認してアカウントを有効化してください。
+              </p>
             </div>
           )}
           {success && (
@@ -139,7 +144,7 @@ export default function SignupPage() {
           <div>
             <button
               type="submit"
-              disabled={loading || success}
+              disabled={loading || success || emailConfirmation}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "登録中..." : "登録"}

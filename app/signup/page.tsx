@@ -44,10 +44,10 @@ export default function SignupPage() {
       if (data.session) {
         // Email confirmation disabled - auto login
         setSuccess(true);
-        setTimeout(() => {
-          // Force a full page reload to ensure session is recognized on server side
-          window.location.href = "/tasks";
-        }, 1500);
+        // Wait for cookies to be set, then redirect
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        // Force a full page reload to ensure session is recognized on server side
+        window.location.href = "/tasks";
       } else if (data.user) {
         // Email confirmation enabled - show confirmation message
         setEmailConfirmation(true);

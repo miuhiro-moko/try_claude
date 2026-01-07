@@ -46,7 +46,7 @@ export default function SignupPage() {
         setSuccess(true);
         console.log("Signup successful with session, redirecting...");
         // Wait for cookies to be set, then redirect
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 1500));
         // Force a full page reload to ensure session is recognized on server side
         window.location.href = "/tasks";
       } else if (data.user) {

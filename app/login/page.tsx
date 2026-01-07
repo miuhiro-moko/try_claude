@@ -32,7 +32,7 @@ export default function LoginPage() {
         console.log("Login successful, redirecting...");
         console.log("Session:", data.session ? "exists" : "missing");
         // Wait a bit for cookies to be set, then redirect
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 500));
         // Force a full page reload to ensure session is recognized on server side
         window.location.href = "/tasks";
       } else {

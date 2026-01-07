@@ -40,12 +40,19 @@ export default function SignupPage() {
       if (error) throw error;
 
       if (data.user) {
-        setSuccess(true);
-        // Auto login after signup
-        setTimeout(() => {
-          router.push("/tasks");
-          router.refresh();
-        }, 1500);
+        // Check if email confirmation is required
+        if (data.user.identities && data.user.identities.length === 0) {
+          // User exists but not confirmed
+          setSuccess(true);
+          setError("確認メールを送信しました。メールを確認してアカウントを有効化してください。");
+        } else {
+          // Auto login after signup (when email confirmation is disabled)
+          setSuccess(true);
+          setTimeout(() => {
+            router.push("/tasks");
+            router.refresh();
+          }, 1500);
+        }
       }
     } catch (err: any) {
       setError(err.message || "登録に失敗しました");
